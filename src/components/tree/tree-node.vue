@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="m-tree-item" @click="nodeSelected">
+    <div class="m-tree-item" @click="nodeClickHandle">
       <div
         v-if="showFoldIcon && nodeData.children.length > 0"
         class="inline-block"
@@ -40,7 +40,6 @@
       </div>
       <node-content :node="nodeData"></node-content>
     </div>
-    <!-- <transition name="fold"> -->
     <el-collapse-transition>
       <ul v-if="nodeData.children.length > 0" v-show="opened" class="node-move">
         <li v-for="(item, index) in nodeData.children" :key="index">
@@ -48,14 +47,14 @@
             :nodeData="item"
             :render-content="renderContent"
             @childCheckChanged="childCheckChanged"
-            @parentCheckChange="checkChange"
+            @parentCheckChange="checkChanged"
             @openTreeNode="openTreeNode"
+            @nodeClick="nodeClick"
           >
           </TreeNode>
         </li>
       </ul>
     </el-collapse-transition>
-    <!-- </transition> -->
   </div>
 </template>
 
@@ -148,8 +147,12 @@ export default {
     /**
      * desc: 打开/关闭 子节点
      */
-    nodeSelected() {
+    nodeClickHandle() {
       this.opened = !this.opened;
+      this.$emit("nodeClick", this.opened, this.nodeData);
+    },
+    nodeClick(opened, nodeData) {
+      this.$emit("nodeClick", opened, nodeData);
     },
     /**
      * desc: 选中/取消选中 事件
@@ -177,7 +180,7 @@ export default {
      *     isCheck: 0(未选中)， 2（选中）
      * }
      */
-    checkChange(arrId, isCheck) {
+    checkChanged(arrId, isCheck) {
       let checkStatus = 1;
       let status = this.nodeData.children.every((item) => {
         return item.checked === 2;

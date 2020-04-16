@@ -5,7 +5,8 @@
         <TreeNode
           :nodeData="item"
           :render-content="renderContent"
-          @parentCheckChange="checkChange"
+          @parentCheckChange="checkChanged"
+          @nodeClick="nodeClick"
         >
         </TreeNode>
       </li>
@@ -137,9 +138,11 @@ export default {
      * @Descriotion : 节点选中/取消状态改变
      * @params : {}
      **/
-    checkChange(arrId, isChecked) {
+    checkChanged(arrId, isChecked) {
+      let checked = false;
       if (isChecked === 2) {
         // 选中
+        checked = true;
         let newArr = this.checkedKeys.concat(arrId);
         this.checkedKeys = Array.from(new Set(newArr));
       } else {
@@ -149,7 +152,8 @@ export default {
           if (index > -1) this.checkedKeys.splice(index, 1);
         });
       }
-      this.$emit("checkChanged", arrId);
+      if (!this.$listeners.checkChanged) return;
+      this.$emit("checkChanged", checked, arrId);
     },
     getCheckedNodes() {
       let nodeList = [];
@@ -168,6 +172,11 @@ export default {
     getCheckedKeys() {
       let list = this.getCheckedNodes();
       return list.map((item) => item.id);
+    },
+    nodeClick(opened, nodeData) {
+      if (this.$listeners.nodeClick) {
+        this.$emit("nodeClick", opened, nodeData);
+      }
     },
   },
 };

@@ -1,8 +1,10 @@
 ## 安装
 npm install tree-custom
 
-import Tree from 'tree-custom'
 ## 使用 Tree
+
+import Tree from 'tree-custom'
+
 1 、简单渲染树结构页面<br>
 ```html
 <Tree :treeData="treeData"/>
@@ -31,7 +33,14 @@ import Tree from 'tree-custom'
  - `defaultExpendKeys`：默认打开的nodeId,类型：Array, 默认：[]
  - `defaultDisabledKeys`：不可以选择的nodeId,类型：Array, 默认：[]
 
-3、Example
+3、添加监听事件
+
+ - checkChanged 选中或者取消选中时触发的事件 <br>
+  回调参数两个，依次为：节点是否选中，节点Id
+ - nodeClick 单击节点时触发的事件 <br>
+  回调参数两个，依次为：节点是否打开，单击的节点数据
+
+4、Example
 ```html
 <Tree
    ref="tree"
@@ -39,9 +48,16 @@ import Tree from 'tree-custom'
    :defaultCheckedKeys="['0']"
    :defaultExpendKeys="['0']"
    :defaultDisabledKeys="['1']"
-   :showCheckBox ="false"
-   :showFoldIcon ="false"/>
+   :showCheckBox="false"
+   :showFoldIcon="false"
+   @checkChanged="checkChanged"
+   @nodeClick="nodeClick"
+   />
 ```
+  - getCheckedNodes 获取当前被选中的节点 <br>
+  this.$refs.tree.getCheckedNodes()
+  - getCheckedKeys 获取当前被选中的节点Id <br>
+  this.$refs.tree.getCheckedKeys()
   
 4、自定义树节点内容
 - 方法一
