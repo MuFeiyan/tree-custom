@@ -1,0 +1,65 @@
+{
+  "id": "1440502",
+  "name": "components_mfy",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "开发组件",
+  "glyphs": [
+    {
+      "icon_id": "1472506",
+      "name": "方框",
+      "font_class": "fangkuang",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "1997349",
+      "name": "打开",
+      "font_class": "dakai",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "2414634",
+      "name": "选中",
+      "font_class": "xuanzhong",
+      "unicode": "e6c0",
+      "unicode_decimal": 59072
+    },
+    {
+      "icon_id": "3024269",
+      "name": "打开",
+      "font_class": "dakai1",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "4545467",
+      "name": "三角下标（正方形）",
+      "font_class": "shouqi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "4942674",
+      "name": "未全选",
+      "font_class": "weiquanxuan",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "5720573",
+      "name": "选中",
+      "font_class": "weibiaoti-_xuanzhong",
+      "unicode": "e66a",
+      "unicode_decimal": 58986
+    },
+    {
+      "icon_id": "6055097",
+      "name": "三角下标（正方形）",
+      "font_class": "triangle-down",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    }
+  ]
+}

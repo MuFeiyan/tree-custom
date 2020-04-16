@@ -1,0 +1,52 @@
+{
+  "name": "tree-custom",
+  "version": "1.0.0",
+  "private": false,
+  "main": "./dist/tree-custom.common.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MuFeiyan/tree-custom.git"
+  },
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "build-bundle": "vue-cli-service build --target lib --name tree-custom ./src/components/tree/index.js",
+    "eslint": "eslint --fix --ext .js,.vue --ignore-path .eslintignore ."
+  },
+  "dependencies": {
+    "core-js": "^2.6.5",
+    "user": "0.0.0",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.10.0",
+    "@vue/cli-plugin-eslint": "^3.10.0",
+    "@vue/cli-service": "^3.10.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-loader": "^2.0.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-vue": "^5.0.0",
+    "prettier": "^2.0.4",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ]
+}
