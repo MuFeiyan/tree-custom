@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": false,
   "main": "./dist/tree-custom.common.js",
+  "author": "mufeiyan",
   "repository": {
     "type": "git",
     "url": "https://github.com/MuFeiyan/tree-custom.git"

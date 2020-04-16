@@ -1,5 +1,6 @@
 ## 安装
 npm install tree-custom
+
 import Tree from 'tree-custom'
 ## 使用 Tree
 1 、简单渲染树结构页面<br>
