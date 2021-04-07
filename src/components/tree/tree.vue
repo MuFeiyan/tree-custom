@@ -119,8 +119,7 @@ export default {
     setTreeNode() {
       const fun = (item) => {
         item.children.forEach((element) => {
-          // detail(element, item)
-          element.parent = this.treeNode;
+          element.parent = item;
           this.$set(element, "checked", 0);
           fun(element);
         });
