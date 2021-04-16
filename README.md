@@ -33,7 +33,7 @@ import Tree from 'tree-custom'
  - `showFoldIcon`:是否显示打开关闭箭头,类型：boolean, 默认：true
  - `showCheckBox`: 是否显示多选框,类型：boolean, 默认：true
  - `defaultCheckedKeys`：默认选中的nodeId,类型：Array, 默认：[]
- - `defaultExpendKeys`：默认打开的nodeId,类型：Array, 默认：[]
+ - `defaultExpandKeys`：默认打开的nodeId,类型：Array, 默认：[]
  - `defaultDisabledKeys`：不可以选择的nodeId,类型：Array, 默认：[]
 
 3、添加监听事件
@@ -49,7 +49,7 @@ import Tree from 'tree-custom'
    ref="tree"
    :treeData="treeData"
    :defaultCheckedKeys="['0']"
-   :defaultExpendKeys="['0']"
+   :defaultExpandKeys="['0']"
    :defaultDisabledKeys="['1']"
    :showCheckBox="false"
    :showFoldIcon="false"

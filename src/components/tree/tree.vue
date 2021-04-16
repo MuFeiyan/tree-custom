@@ -22,7 +22,7 @@ export default {
   components: { TreeNode },
   provide() {
     return {
-      defaultExpendKeys: this.defaultExpendKeys,
+      defaultExpandKeys: this.defaultExpandKeys,
       defaultDisabledKeys: this.defaultDisabledKeys,
       showCheckBox: this.showCheckBox,
       showFoldIcon: this.showFoldIcon,
@@ -35,7 +35,7 @@ export default {
         return [];
       },
     },
-    defaultExpendKeys: {
+    defaultExpandKeys: {
       type: Array,
       default: () => {
         return [];

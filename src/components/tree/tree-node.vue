@@ -101,7 +101,7 @@ export default {
     renderContent: Function,
   },
   inject: [
-    "defaultExpendKeys",
+    "defaultExpandKeys",
     "defaultDisabledKeys",
     "showCheckBox",
     "showFoldIcon",
@@ -120,7 +120,7 @@ export default {
       this.$emit("parentCheckChange", [this.nodeData.id], 2);
     }
     // 还原是否打开
-    if (this.defaultExpendKeys.indexOf(this.nodeData.id) > -1) {
+    if (this.defaultExpandKeys.indexOf(this.nodeData.id) > -1) {
       this.openTreeNode();
     }
     if (this.nodeData.children.length === 0) {
