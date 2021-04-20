@@ -1,7 +1,7 @@
 <template>
   <div class="m-tree">
     <ul>
-      <li v-for="(item, index) in treeNode.children" :key="index">
+      <li v-for="(item, index) in treeNode" :key="index">
         <TreeNode
           :nodeData="item"
           :render-content="renderContent"
@@ -66,11 +66,7 @@ export default {
   data() {
     return {
       checkedKeys: [],
-      treeNode: {
-        id: "mm",
-        label: "mm",
-        children: [],
-      },
+      treeNode: [],
       isTree: true,
     };
   },
@@ -91,6 +87,7 @@ export default {
   },
   methods: {
     setCheckKeys() {
+      if (this.defaultCheckedKeys.length === 0) return;
       let checkArr = [];
       const _this = this;
       const addCheck = (node) => {
@@ -109,7 +106,7 @@ export default {
           cycleFun(child);
         });
       };
-      cycleFun(this.treeNode);
+      this.treeNode.forEach((node) => cycleFun(node));
       this.checkedKeys = Array.from(new Set(checkArr.concat(this.checkedKeys)));
     },
     /**
@@ -129,7 +126,7 @@ export default {
         Object.assign(obj, item);
         obj.parent = this.treeNode;
         this.$set(obj, "checked", 0);
-        this.treeNode.children.push(obj);
+        this.treeNode.push(obj);
         fun(obj);
       });
     },
@@ -165,7 +162,7 @@ export default {
           getCheckedList(item);
         });
       };
-      this.treeNode.children.forEach((item) => getCheckedList(item));
+      this.treeNode.forEach((item) => getCheckedList(item));
       return nodeList;
     },
     getCheckedKeys() {
