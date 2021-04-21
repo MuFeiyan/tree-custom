@@ -5,8 +5,6 @@
         <TreeNode
           :nodeData="item"
           :render-content="renderContent"
-          @parentCheckChange="checkChanged"
-          @nodeClick="nodeClick"
         >
         </TreeNode>
       </li>
@@ -65,7 +63,6 @@ export default {
   },
   data() {
     return {
-      checkedKeys: [],
       treeNode: [],
       isTree: true,
     };
@@ -86,14 +83,16 @@ export default {
     },
   },
   methods: {
+    /**
+     * desc: 初始化check状态
+     * 层级checked：0(未选中) ，1(半选)，2（选中）
+     */
     setCheckKeys() {
       if (this.defaultCheckedKeys.length === 0) return;
-      let checkArr = [];
       const _this = this;
       const addCheck = (node) => {
         node.checked = 2;
         if (node.children.length === 0) {
-          checkArr.push(node.id);
           return;
         }
         node.children.forEach((item) => addCheck(item));
@@ -107,7 +106,6 @@ export default {
         });
       };
       this.treeNode.forEach((node) => cycleFun(node));
-      this.checkedKeys = Array.from(new Set(checkArr.concat(this.checkedKeys)));
     },
     /**
      * desc: 根据数据渲染树结构
@@ -131,26 +129,8 @@ export default {
       });
     },
     /**
-     * @Descriotion : 节点选中/取消状态改变
-     * @params : {}
-     **/
-    checkChanged(arrId, isChecked) {
-      let checked = false;
-      if (isChecked === 2) {
-        // 选中
-        checked = true;
-        let newArr = this.checkedKeys.concat(arrId);
-        this.checkedKeys = Array.from(new Set(newArr));
-      } else {
-        // 不选中
-        arrId.forEach((item) => {
-          let index = this.checkedKeys.indexOf(item);
-          if (index > -1) this.checkedKeys.splice(index, 1);
-        });
-      }
-      if (!this.$listeners.checkChanged) return;
-      this.$emit("checkChanged", checked, arrId);
-    },
+     * desc: 获取选中的节点
+     */
     getCheckedNodes() {
       let nodeList = [];
       let getCheckedList = (node) => {
@@ -165,15 +145,13 @@ export default {
       this.treeNode.forEach((item) => getCheckedList(item));
       return nodeList;
     },
+    /**
+     * desc: 获取选中的节点Id
+     */
     getCheckedKeys() {
       let list = this.getCheckedNodes();
       return list.map((item) => item.id);
-    },
-    nodeClick(opened, nodeData) {
-      if (this.$listeners.nodeClick) {
-        this.$emit("nodeClick", opened, nodeData);
-      }
-    },
+    }
   },
 };
 </script>

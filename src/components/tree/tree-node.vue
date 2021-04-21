@@ -46,10 +46,8 @@
           <TreeNode
             :nodeData="item"
             :render-content="renderContent"
-            @childCheckChanged="childCheckChanged"
-            @parentCheckChange="checkChanged"
+            @updateParentCheckStatus="updateCheckStatus"
             @openTreeNode="openTreeNode"
-            @nodeClick="nodeClick"
           >
           </TreeNode>
         </li>
@@ -110,19 +108,19 @@ export default {
     return {
       opened: false,
       isDisabled: false,
-      tree: null,
+      tree: null, // 根节点组件实例
     };
   },
   created() {
-    // 还原是否选中
-    if (this.nodeData.checked === 2) {
-      // 父级check状态也需要改变
-      this.$emit("parentCheckChange", [this.nodeData.id], 2);
+    if (this.nodeData.checked) {
+      // 父级check状态根据子级节点状态更新
+      this.$emit("updateParentCheckStatus");
     }
-    // 还原是否打开
+    // 还原节点是否打开
     if (this.defaultExpandKeys.indexOf(this.nodeData.id) > -1) {
-      this.openTreeNode();
+      this.$emit("openTreeNode");
     }
+    // 最里层子节点默认打开，新增子节点时默认打开方便查看新增数据
     if (this.nodeData.children.length === 0) {
       this.opened = true;
     }
@@ -148,11 +146,10 @@ export default {
      * desc: 打开/关闭 子节点
      */
     nodeClickHandle() {
-      this.opened = !this.opened;
-      this.$emit("nodeClick", this.opened, this.nodeData);
-    },
-    nodeClick(opened, nodeData) {
-      this.$emit("nodeClick", opened, nodeData);
+      if (this.nodeData.children.length > 0) {
+        this.opened = !this.opened;
+      }
+      this.tree.$listeners.nodeClick && this.tree.$emit("nodeClick", this.opened, this.nodeData);
     },
     /**
      * desc: 选中/取消选中 事件
@@ -165,22 +162,22 @@ export default {
       } else {
         checkStatus = 2;
       }
-      // 自身
-      // this.nodeData.checked = checkStatus;
-      this.$emit("childCheckChanged", this.nodeData.id, checkStatus);
-      // 向下 子级
+      // 自身状态更新
+      this.nodeData.checked = checkStatus;
+      // 向下，子级
       let arrId = this.childrenCheck(checkStatus);
-      // 向上 触发父级事件
-      this.$emit("parentCheckChange", arrId, checkStatus);
+      // 向上，更新父节点状态
+      this.$listeners.updateParentCheckStatus && this.$emit("updateParentCheckStatus");
+      // 触发check状态改变事件
+      this.tree.$listeners.checkChanged && this.tree.$emit("checkChanged", arrId, checkStatus === 2);
     },
     /**
-     * desc: 子级状态改变，父级checked状态改变
-     * params { 这两个参数用于传给最外层tree组件；
-     *     arrId: 当前操作的最里层节点的id;
-     *     isCheck: 0(未选中)， 2（选中）
+     * desc: 监听事件，子节点状态改变时更新当前节点check状态
+     * params : {
+     *    checkStatus: 节点状态
      * }
      */
-    checkChanged(arrId, isCheck) {
+    updateCheckStatus() {
       let checkStatus = 1;
       let status = this.nodeData.children.every((item) => {
         return item.checked === 2;
@@ -196,7 +193,8 @@ export default {
         }
       }
       this.nodeData.checked = checkStatus;
-      this.$emit("parentCheckChange", arrId, isCheck);
+      // 更新父节点状态
+      this.$emit("updateParentCheckStatus");
     },
     /**
      * desc: 子级checked状态改变
@@ -218,10 +216,6 @@ export default {
       };
       check(this.nodeData);
       return arrId;
-    },
-    childCheckChanged(nodeId, checkStatus) {
-      let node = this.nodeData.children.find((item) => item.id === nodeId);
-      if (node) node.checked = checkStatus;
     },
   },
 };
