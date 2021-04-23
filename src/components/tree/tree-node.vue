@@ -15,7 +15,7 @@
       </div>
       <div v-if="showCheckBox" class="inline-block check-box">
         <span
-          v-if="isDisabled"
+          v-if="nodeData.disabled"
           :class="[
             'icon iconfont icon-size',
             nodeData.checked === 0
@@ -107,7 +107,6 @@ export default {
   data() {
     return {
       opened: false,
-      isDisabled: false,
       tree: null, // 根节点组件实例
     };
   },
@@ -123,10 +122,6 @@ export default {
     // 最里层子节点默认打开，新增子节点时默认打开方便查看新增数据
     if (this.nodeData.children.length === 0) {
       this.opened = true;
-    }
-    // 该层级是否是禁用状态
-    if (this.defaultDisabledKeys.indexOf(this.nodeData.id) > -1) {
-      this.isDisabled = true;
     }
     if (this.$parent.isTree) {
       this.tree = this.$parent;
@@ -149,7 +144,11 @@ export default {
       if (this.nodeData.children.length > 0) {
         this.opened = !this.opened;
       }
-      this.tree.$listeners.nodeClick && this.tree.$emit("nodeClick", this.opened, this.nodeData);
+      if (this.tree.$listeners.nodeClick) {
+        let data = { ...this.nodeData };
+        delete data.children;
+        this.tree.$emit("nodeClick", data, this.opened);
+      }
     },
     /**
      * desc: 选中/取消选中 事件
@@ -167,9 +166,11 @@ export default {
       // 向下，子级
       let arrId = this.childrenCheck(checkStatus);
       // 向上，更新父节点状态
-      this.$listeners.updateParentCheckStatus && this.$emit("updateParentCheckStatus");
+      this.$listeners.updateParentCheckStatus &&
+        this.$emit("updateParentCheckStatus");
       // 触发check状态改变事件
-      this.tree.$listeners.checkChanged && this.tree.$emit("checkChanged", arrId, checkStatus === 2);
+      this.tree.$listeners.checkChanged &&
+        this.tree.$emit("checkChanged", arrId, checkStatus === 2);
     },
     /**
      * desc: 监听事件，子节点状态改变时更新当前节点check状态
@@ -204,13 +205,12 @@ export default {
     childrenCheck(checkStatus) {
       let arrId = [];
       let check = (node) => {
-        if (node.children.length === 0) {
+        if (node.children.length === 0 && !node.disabled) {
           arrId.push(node.id);
           return;
         }
-        node.checked = checkStatus;
         node.children.forEach((item) => {
-          item.checked = checkStatus;
+          !item.disabled && (item.checked = checkStatus);
           check(item);
         });
       };

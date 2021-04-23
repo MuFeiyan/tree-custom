@@ -1,5 +1,5 @@
-import Tree from '@/components/tree';
-import { mount  } from "@vue/test-utils";
+import Tree from "@/components/tree";
+import { mount } from "@vue/test-utils";
 import eventUtil from "../../src/assets/js/eventUtil";
 
 describe("Tree", () => {
@@ -100,7 +100,9 @@ describe("Tree", () => {
     }
     function delNode(event, node) {
       eventUtil.stopPropagation(event);
-      const children = node.parent.children ? node.parent.children : node.parent;
+      const children = node.parent.children
+        ? node.parent.children
+        : node.parent;
       const index = children.findIndex((d) => d.id === node.id);
       children.splice(index, 1);
     }

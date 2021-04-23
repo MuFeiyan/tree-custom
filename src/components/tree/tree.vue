@@ -2,11 +2,7 @@
   <div class="m-tree">
     <ul>
       <li v-for="(item, index) in treeNode" :key="index">
-        <TreeNode
-          :nodeData="item"
-          :render-content="renderContent"
-        >
-        </TreeNode>
+        <TreeNode :nodeData="item" :render-content="renderContent"> </TreeNode>
       </li>
     </ul>
   </div>
@@ -72,12 +68,13 @@ export default {
       handler() {
         this.setTreeNode();
         this.setCheckKeys();
+        this.setDisabledNode();
       },
       immediate: true,
     },
-    defaultCheckedKeys: {
+    defaultDisabledKeys: {
       handler() {
-        this.setCheckKeys();
+        this.setDisabledNode();
       },
       immediate: true,
     },
@@ -88,6 +85,10 @@ export default {
      * 层级checked：0(未选中) ，1(半选)，2（选中）
      */
     setCheckKeys() {
+      if (!this.showCheckBox) {
+        console.warn("showCheckBox = false 时,defaultCheckedKeys 无效");
+        return;
+      }
       if (this.defaultCheckedKeys.length === 0) return;
       const _this = this;
       const addCheck = (node) => {
@@ -115,7 +116,7 @@ export default {
       const fun = (item) => {
         item.children.forEach((element) => {
           element.parent = item;
-          this.$set(element, "checked", 0);
+          this.showCheckBox && this.$set(element, "checked", 0);
           fun(element);
         });
       };
@@ -123,10 +124,25 @@ export default {
         let obj = {};
         Object.assign(obj, item);
         obj.parent = this.treeNode;
-        this.$set(obj, "checked", 0);
+        this.showCheckBox && this.$set(obj, "checked", 0);
         this.treeNode.push(obj);
         fun(obj);
       });
+    },
+    setDisabledNode() {
+      if (this.defaultDisabledKeys.length === 0) return;
+      const _this = this;
+      const cycleFun = (node) => {
+        if (_this.defaultDisabledKeys.indexOf(node.id) > -1) {
+          this.$set(node, "disabled", true);
+        } else {
+          this.$set(node, "disabled", false);
+        }
+        node.children.forEach((child) => {
+          cycleFun(child);
+        });
+      };
+      this.treeNode.forEach((node) => cycleFun(node));
     },
     /**
      * desc: 获取选中的节点
@@ -135,7 +151,7 @@ export default {
       let nodeList = [];
       let getCheckedList = (node) => {
         if (node.children.length === 0 && node.checked === 2) {
-          nodeList.push(node);
+          nodeList.push({ ...node });
           return;
         }
         node.children.forEach((item) => {
@@ -151,7 +167,7 @@ export default {
     getCheckedKeys() {
       let list = this.getCheckedNodes();
       return list.map((item) => item.id);
-    }
+    },
   },
 };
 </script>
